@@ -1,16 +1,5 @@
-# sada
+# SoundSense: IoT Interaction System for the Deaf
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Introduction
+SoundSense is an innovative IoT solution designed to enable people with hearing impairments to interact with sound-emitting objects in their homes, such as doorbells, alarms, and other essential devices. This system uses a combination of smart technology and user-friendly interfaces to ensure seamless integration into daily life.
+ 
