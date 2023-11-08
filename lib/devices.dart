@@ -19,6 +19,11 @@ class Devices extends StatelessWidget {
             deviceButton('Campainha'),
             deviceButton('Sensor de temperatura'),
             deviceButton('Sensor de umidade'),
+            const Spacer(), // Gambiarra pra alinhar os botões
+            const Spacer(),
+            const Spacer(),
+            const Spacer(),
+            const Spacer(),
             const Spacer(),
             const BottomRow(),
           ],
@@ -35,17 +40,7 @@ class Devices extends StatelessWidget {
         color: Colors.orange,
         borderRadius: BorderRadius.circular(10.0),
       ),
-      child: Text(device, style: const TextStyle(color: Colors.white)),
+      child: Text(device, style: const TextStyle(color: Colors.black)),
     );
-  }
-}
-
-class StyledText extends StatelessWidget {
-  const StyledText({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('Hello World',
-        style: TextStyle(fontSize: 28, color: Colors.white));
   }
 }

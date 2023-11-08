@@ -8,7 +8,6 @@ class HomeStatusCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
         gradient: LinearGradient(
           colors: [
             Colors.orange.shade700,
