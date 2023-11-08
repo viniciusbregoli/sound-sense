@@ -9,21 +9,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                // Use Padding instead of Container for simplicity
-                padding: EdgeInsets.all(20.0),
-                child: Text('Minha casa',
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 12, 0, 0), fontSize: 24.0)),
+              Container(
+                width: double.infinity,
+                color: Colors.grey[900],
+                padding: const EdgeInsets.all(20.0),
+                child: const Text(
+                  'Minha casa',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.0,
+                  ),
+                ),
               ),
-              HomeStatusCard(),
-              Devices()
+              const HomeStatusCard(),
+              const Devices(),
             ],
           ),
         ),
