@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sada/devices.dart';
 import 'package:sada/home_status_card.dart';
+import 'bottom_row.dart';
 
 void main() => runApp(const MyApp());
 
@@ -28,7 +29,12 @@ class MyApp extends StatelessWidget {
                 ),
               ),
               const HomeStatusCard(),
-              const Devices(),
+              const Expanded(child: Devices()),
+              Container(
+                color: Colors.grey[900],
+                padding: const EdgeInsets.all(20.0),
+                child: const BottomRow(),
+              )
             ],
           ),
         ),

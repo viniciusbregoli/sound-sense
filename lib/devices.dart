@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sada/bottom_row.dart';
 
 class Devices extends StatelessWidget {
   const Devices({super.key});
@@ -8,25 +7,29 @@ class Devices extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(20.0),
-        color: Colors.grey[900],
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        color: Colors.grey[900], // Cor de fundo da seção de dispositivos
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Dispositivos',
-                style: TextStyle(color: Colors.white, fontSize: 24.0)),
             const SizedBox(height: 20.0),
-            deviceButton('Campainha'),
-            deviceButton('Sensor de temperatura'),
-            deviceButton('Sensor de umidade'),
-            const Spacer(), // Gambiarra pra alinhar os botões
-            const Spacer(),
-            const Spacer(),
-            const Spacer(),
-            const Spacer(),
-            const Spacer(),
-            const BottomRow(),
-          ],
+            const Text(
+              'Dispositivos',
+              style: TextStyle(color: Colors.white, fontSize: 24.0),
+            ),
+            const SizedBox(height: 20.0),
+            Expanded(
+              child: ListView(
+                children: [
+                  deviceButton('Campainha'),
+                  const SizedBox(height: 10.0),
+                  deviceButton('Sensor de temperatura'),
+                  const SizedBox(height: 10.0),
+                  deviceButton('Sensor de umidade'),
+                ],
+              ),
+            ),
+            ],
         ),
       ),
     );
@@ -34,13 +37,19 @@ class Devices extends StatelessWidget {
 
   Widget deviceButton(String device) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10.0),
       padding: const EdgeInsets.all(15.0),
       decoration: BoxDecoration(
-        color: Colors.orange,
-        borderRadius: BorderRadius.circular(10.0),
+        color: Colors.orange, // Cor do botão
+        borderRadius: BorderRadius.circular(10.0), // Arredondamento do botão
       ),
-      child: Text(device, style: const TextStyle(color: Colors.black)),
+      child: Text(
+        device,
+        style: const TextStyle(
+          color: Colors.black, // Cor do texto
+          fontSize: 16.0, // Tamanho do texto
+          fontWeight: FontWeight.bold, // Peso da fonte
+        ),
+      ),
     );
   }
 }

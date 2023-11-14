@@ -7,7 +7,7 @@ class BottomRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void openDialog() {
+    void openAddDialog() {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -54,18 +54,50 @@ class BottomRow extends StatelessWidget {
       );
     }
 
-    return Expanded(
-        child: Row(
+    void openInfoDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.orange, 
+            title: const Text('Informações'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Versão: 1.0.0'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text(
+                  "Fechar",
+                  style: TextStyle(color: Colors.black),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         const Icon(Icons.home, color: Colors.orange, size: 30.0),
         IconButton(
           icon: const Icon(Icons.add, color: Colors.orange, size: 30.0),
-          onPressed: openDialog,
+          onPressed: openAddDialog,
         ),
         const Icon(Icons.delete, color: Colors.orange, size: 30.0),
-        const Icon(Icons.info, color: Colors.orange, size: 30.0),
+        IconButton(
+          icon: const Icon(Icons.info, color: Colors.orange, size: 30.0),
+          onPressed: openInfoDialog,
+        ),
       ],
-    ));
+    );
   }
 }
