@@ -59,7 +59,7 @@ class BottomRow extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            backgroundColor: Colors.orange, 
+            backgroundColor: Colors.orange,
             title: const Text('Informações'),
             content: const SingleChildScrollView(
               child: ListBody(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class BluetoothDevicesScreen extends StatelessWidget {
   BluetoothDevicesScreen({super.key});
 
-
   final List<String> devices = ['Device 1', 'Device 2', 'Device 3'];
 
   @override
