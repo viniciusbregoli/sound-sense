@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:sada/devices.dart';
 import 'package:sada/home_status_card.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'bottom_row.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:web_socket_channel/io.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  final channel = IOWebSocketChannel.connect('ws://192.168.15.3/ws');
+
+  WidgetsFlutterBinding.ensureInitialized();
+  // Configuração do FlutterLocalNotificationsPlugin
+  var initializationSettingsAndroid = const AndroidInitializationSettings(
+      '@mipmap/ic_launcher'); // Use o ícone do seu app
+  var initializationSettingsIOS = const IOSInitializationSettings();
+  var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
+  var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  runApp(MyApp(channel: channel));
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final WebSocketChannel channel;
+
+  const MyApp({super.key, required this.channel});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +53,7 @@ class MyApp extends StatelessWidget {
               Container(
                 color: Colors.grey[900],
                 padding: const EdgeInsets.all(20.0),
-                child: const BottomRow(),
+                child: BottomRow(channel: channel),
               )
             ],
           ),

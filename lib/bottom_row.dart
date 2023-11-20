@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sada/bluetooth_devices_screen.dart';
 import 'package:sada/wifi_devices_screen.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class BottomRow extends StatelessWidget {
-  const BottomRow({super.key});
+  final WebSocketChannel channel;
+  BottomRow({super.key, required this.channel});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,9 @@ class BottomRow extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => WifiDevicesScreen()),
+                            builder: (context) => WifiDevicesScreen(
+                                  channel: channel,
+                                )),
                       );
                     },
                   ),
