@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Devices extends StatefulWidget {
   const Devices({super.key});
@@ -11,9 +12,11 @@ class Devices extends StatefulWidget {
 
 class DevicesState extends State<Devices> {
   IOWebSocketChannel? channel;
-  Timer? heartbeatTimer;
-  final int heartbeatIntervalSeconds = 5;
-  bool heartbeatAckReceived = true;
+  Timer? messageTimer;
+  bool alive = true;
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   List<String> deviceNames = [
     'Campainha',
@@ -31,64 +34,54 @@ class DevicesState extends State<Devices> {
   @override
   void dispose() {
     channel?.sink.close();
-    stopHeartbeat();
     super.dispose();
   }
 
   void connectToWebSocket() {
-    channel = IOWebSocketChannel.connect('ws://172.20.10.8/ws');
-    startHeartbeat();
+    channel = IOWebSocketChannel.connect('ws://192.168.15.7/ws');
+
+    showNotification('Conectado ao WebSocket', 'Você está conectado com sucesso.');
+
     setState(() {
       bellButtonColor = Colors.green; // Muda a cor para verde ao conectar
     });
 
     channel?.stream.listen((message) {
-      if (message == 'heartbeat_ack') {
-        heartbeatAckReceived = true; // Ack do heartbeat recebido
+      if (message == 'heartbeat') {
+        setState(() {
+          alive = true;
+        });
       }
+      resetMessageTimer();
     }, onDone: () {
-      // WebSocket foi fechado
       setState(() {
-        bellButtonColor =
-            Colors.orange; // Muda a cor para laranja quando desconecta
+        bellButtonColor = Colors.orange;
       });
     }, onError: (error) {
-      // Erro na conexão WebSocket
       setState(() {
-        bellButtonColor =
-            Colors.orange; // Muda a cor para laranja em caso de erro
+        bellButtonColor = Colors.orange;
       });
     });
+    startMessageTimer();
   }
 
-  void startHeartbeat() {
-    stopHeartbeat(); // Para o heartbeat anterior se existir
-    heartbeatTimer =
-        Timer.periodic(Duration(seconds: heartbeatIntervalSeconds), (timer) {
-      sendHeartbeat();
-      // Inicia um temporizador para verificar a resposta
-      Future.delayed(Duration(seconds: heartbeatIntervalSeconds), () {
-        if (!heartbeatAckReceived) {
-          // Resposta não recebida
-          print("Conexão perdida.");
-          // Aqui você pode atualizar a UI ou tentar reconectar
+  void startMessageTimer() {
+    messageTimer = Timer(const Duration(seconds: 5), () {
+      // Executa esse código quando o temporizador expirar
+      // Verifica se a mensagem não foi recebida nos últimos 5 segundos
+      setState(() {
+        // Faça o que você precisa fazer aqui, como mudar a cor de volta para a cor padrão
+        setState(() {
           bellButtonColor = Colors.orange;
-        }
-        heartbeatAckReceived = false; // Reseta a flag para o próximo heartbeat
+        });
       });
     });
   }
 
-  void sendHeartbeat() {
-    if (channel != null) {
-      channel!.sink.add('heartbeat'); // Enviar mensagem de heartbeat
-      // Você pode implementar lógica adicional aqui, como verificar se uma resposta foi recebida
-      heartbeatAckReceived = false;
-    }
-  }
-
-  void stopHeartbeat() {
-    heartbeatTimer?.cancel();
+  void resetMessageTimer() {
+    // Reseta o temporizador para começar a contar a partir do zero novamente
+    messageTimer?.cancel();
+    startMessageTimer();
   }
 
   @override
@@ -115,7 +108,6 @@ class DevicesState extends State<Devices> {
                       if (deviceNames[index] == 'Campainha') {
                         connectToWebSocket();
                       }
-                      // Aqui, você pode adicionar lógica adicional para outros dispositivos, se necessário
                     },
                     child: deviceButton(
                         deviceNames[index],
@@ -149,6 +141,27 @@ class DevicesState extends State<Devices> {
           fontWeight: FontWeight.bold,
         ),
       ),
+    );
+  }
+
+  Future<void> showNotification(String title, String body) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'your_channel_id', // Um ID de canal exclusivo para Android
+      'Nome do canal', // Um nome de canal para Android
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0, // Um ID de notificação exclusivo
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: 'Notificação exemplo',
     );
   }
 }

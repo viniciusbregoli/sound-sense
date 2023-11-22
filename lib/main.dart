@@ -6,15 +6,25 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Configuração do FlutterLocalNotificationsPlugin
-  var initializationSettingsAndroid = const AndroidInitializationSettings(
-      '@mipmap/ic_launcher'); // Use o ícone do seu app
-  var initializationSettingsIOS = const IOSInitializationSettings();
-  var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
-  var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  // Crie uma instância de FlutterLocalNotificationsPlugin
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  // Configure as configurações padrão das notificações
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onSelectNotification: (String? payload) async {
+      // Este callback é chamado quando o usuário toca na notificação
+    },
+  );
 
   runApp(const MyApp());
 }
