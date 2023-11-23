@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 
 class Devices extends StatefulWidget {
   const Devices({super.key});
@@ -14,9 +14,6 @@ class DevicesState extends State<Devices> {
   IOWebSocketChannel? channel;
   Timer? messageTimer;
   bool alive = true;
-
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
 
   List<String> deviceNames = [
     'Campainha',
@@ -38,19 +35,36 @@ class DevicesState extends State<Devices> {
   }
 
   void connectToWebSocket() {
-    channel = IOWebSocketChannel.connect('ws://192.168.15.7/ws');
-
-    showNotification('Conectado ao WebSocket', 'Você está conectado com sucesso.');
+    channel = IOWebSocketChannel.connect('ws://172.20.10.11/ws');
 
     setState(() {
       bellButtonColor = Colors.green; // Muda a cor para verde ao conectar
     });
 
-    channel?.stream.listen((message) {
+    channel?.stream.listen((message) async {
       if (message == 'heartbeat') {
         setState(() {
           alive = true;
         });
+      } else if (message == 'campainha') {
+        await http.get(Uri.parse('http://172.20.10.9/led'));
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Notificação"),
+              content: const Text("Campainha tocada"),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
       }
       resetMessageTimer();
     }, onDone: () {
@@ -141,27 +155,6 @@ class DevicesState extends State<Devices> {
           fontWeight: FontWeight.bold,
         ),
       ),
-    );
-  }
-
-  Future<void> showNotification(String title, String body) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your_channel_id', // Um ID de canal exclusivo para Android
-      'Nome do canal', // Um nome de canal para Android
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(
-      0, // Um ID de notificação exclusivo
-      title,
-      body,
-      platformChannelSpecifics,
-      payload: 'Notificação exemplo',
     );
   }
 }
