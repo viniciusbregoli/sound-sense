@@ -16,7 +16,7 @@ flowchart LR
 
 The system has three parts on the same Wi-Fi network. The firmware for both boards lives in [soundsense-esp32](https://github.com/viniciusbregoli/soundsense-esp32).
 
-- **Doorbell board** (`Esp 1.cpp`): runs a WebSocket server at `/ws`, sends `heartbeat` every second and sends `campainha` once when the doorbell pin (GPIO 2) reads high.
+- **Doorbell board** (`Esp 1.cpp`): runs a WebSocket server at `/ws`, sends `heartbeat` every second and sends `campainha` when GPIO 2 reads high. In the current firmware GPIO 2 is set as an output and driven high at startup, so `campainha` goes out once, right after boot, and not on a button press.
 - **App** (this repo): tapping **Campainha** on the home screen connects to the doorbell's WebSocket. The button turns green while messages keep arriving and back to orange after 5 s without one. When `campainha` arrives, the app calls the alert board and shows a "Campainha tocada" dialog.
 - **Alert board** (`Esp2.cpp`): runs an HTTP server; `GET /led` turns on the LED on GPIO 2 so the ring is also visible in the room.
 
